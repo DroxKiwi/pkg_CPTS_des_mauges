@@ -1,0 +1,341 @@
+Metadata-Version: 1.2
+Name: CPTSdal
+Version: 1.0.0
+Summary: Package CPTS DAL
+Home-page: UNKNOWN
+Author: Corentin Fredj
+Author-email: corentinfredj.dev@gmail.fr
+Maintainer: Salesky
+Maintainer-email: corentinfredj.dev@gmail.fr
+License: GPL V3
+Description: # Documentation Package
+        
+        ## Sommaire 
+        
+        - 1 GÃ©nÃ©rer les tables
+        - 2 Modification du code gÃ©nÃ©rÃ©
+        - 3 Ajout des nouvelles tables aux classes
+        - 4 Versionning
+        - 5 GÃ©nÃ©ration de la Wheel
+        - 6 DÃ©ploiement en local
+        - 7 DÃ©ploiement en live
+        - ADDENDUM Ajouter une base au package 
+        
+        ## 1 GÃ©nÃ©rer les tables
+        
+        Se diriger dans *_OutilCreation\creClassFromBdd.py*, dÃ©commenter la configuration de base correspondante Ã  la base qu'on veut atteindre, et bien penser Ã  commenter les autres.
+        
+        Exemple :
+        ```py
+        
+        ...
+        
+        """
+        nomBase = 'projeqtor'
+        nomRep = f'db{nomBase}'
+        nomImport = f'Bdd.db{nomBase}.{nomBase}'
+        cnxString = 'cnx.projeqtor_my'
+        nomTbl = ''
+        oCnx = cnx.CNX.projeqtor_my()
+        typeBdd = "MYSQL"
+        """
+        
+        #"""
+        nomBase = 'SALESKY'
+        nomRep = f'db{nomBase}'
+        nomImport = f'Bdd.db{nomBase}.{nomBase}'
+        cnxString = 'cnx.Salesky_ms'
+        nomTbl = ''
+        oCnx = cnx.CNX.Salesky_ms()
+        typeBdd = "MSSQL"
+        #"""
+        
+        """
+        nomBase = 'BPW'
+        nomRep = f'db{nomBase}'
+        nomImport = f'Bdd.db{nomBase}.{nomBase}'
+        cnxString = 'cnx.BPW_ms'
+        nomTbl = ''
+        oCnx = cnx.CNX.BPW_ms()
+        typeBdd = "MSSQL"
+        """
+        
+        ...
+        
+        ```
+        
+        Lancer le script.
+        
+        RÃ©cuperer les fichier gÃ©nÃ©rÃ©es dans le rÃ©pertoire *_OutilCreation\fichierClass*. Chaque nom de fichier sont l'Ã©quivalent du nom de la table en base. Les dÃ©placer dans le rÃ©pertoire correspondant Ã  la base :
+        
+        Exemple pour dbSALESKY : 
+        
+        *SaleskyBdd\dbSALESKY*
+        
+        ## 2 Modification du code gÃ©nÃ©rÃ©
+        
+        Ouvrir le fichier de la table gÃ©nÃ©rÃ©, et modifier les requÃªtes suivante :
+        
+        UPDATE : 
+        InsÃ©rer l'id dans le where 
+        
+        ```py
+            ... code gÃ©nÃ©rÃ©
+        	def update(padm_applist_o):
+        		_oadm_applist = padm_applist_o
+        		_upSQL = ("UPDATE [dbo].[adm_applist] SET "
+        		"appNom = " + ("null" if _oadm_applist.appNom == None else  ("'" + str(_oadm_applist.appNom) + "'")) + ", "
+        		"appMode = " + ("null" if _oadm_applist.appMode == None else  ("'" + str(_oadm_applist.appMode) + "'")) + ", "
+        		"appDetails = " + ("null" if _oadm_applist.appDetails == None else  ("'" + str(_oadm_applist.appDetails) + "'")) + ", "
+        		"tecTimeInsert = " + ("null" if _oadm_applist.tecTimeInsert == None else  ("'" + str(_oadm_applist.tecTimeInsert) + "'")) + " "
+        		"WHERE ID = ID;")
+        		return _upSQL
+        
+            ... code modifiÃ©
+        	def update(padm_applist_o):
+        		_oadm_applist = padm_applist_o
+        		_upSQL = ("UPDATE [dbo].[adm_applist] SET "
+        		"appNom = " + ("null" if _oadm_applist.appNom == None else  ("'" + str(_oadm_applist.appNom) + "'")) + ", "
+        		"appMode = " + ("null" if _oadm_applist.appMode == None else  ("'" + str(_oadm_applist.appMode) + "'")) + ", "
+        		"appDetails = " + ("null" if _oadm_applist.appDetails == None else  ("'" + str(_oadm_applist.appDetails) + "'")) + " "
+        		"WHERE idAppList = '"+str(_oadm_applist.idAppList)+"';")
+        		return _upSQL
+        ```
+        
+        INSERT :
+        Supprimer les COLONNES auto-gÃ©nÃ©rÃ©s, supprimer l'identifiant dans les noms de COLONNES, ajouter l'identifiant dans les VALUES si non auto-gÃ©nÃ©rÃ©.
+        
+        ```py
+        ... code gÃ©nÃ©rÃ© 
+        	def insert(padm_applist_o):
+        		_oadm_applist = padm_applist_o
+        		_insSQL = ("INSERT INTO [dbo].[adm_applist] (idAppList, appNom, appMode, appDetails, tecTimeInsert) "
+        		"VALUES ("
+        		 + ('null' if _oadm_applist.appNom == None else "'" + str(_oadm_applist.appNom) + "'") + ", "
+        		 + ('null' if _oadm_applist.appMode == None else "'" + str(_oadm_applist.appMode) + "'") + ", "
+        		 + ('null' if _oadm_applist.appDetails == None else "'" + str(_oadm_applist.appDetails) + "'") + ", "
+        		 + ('null' if _oadm_applist.tecTimeInsert == None else "'" + str(_oadm_applist.tecTimeInsert) + "')"))
+        		return _insSQL
+        
+        ... code modifiÃ©
+        	def insert(padm_applist_o):
+        		_oadm_applist = padm_applist_o
+        		_insSQL = ("INSERT INTO [dbo].[adm_applist] (appNom, appMode, appDetails) "
+        		"VALUES ("
+        		 + ('null' if _oadm_applist.appNom == None else "'" + str(_oadm_applist.appNom) + "'") + ", "
+        		 + ('null' if _oadm_applist.appMode == None else "'" + str(_oadm_applist.appMode) + "'") + ", "
+        		 + ('null' if _oadm_applist.appDetails == None else "'" + str(_oadm_applist.appDetails) + "'") + ")")
+        		return _insSQL
+        ```
+        
+        READ ID :
+            Id Ã  corriger dans le where, et supprimer les valeurs purements techniques si nÃ©cessaire.
+        
+        ```py
+        ... code gÃ©nÃ©rÃ©
+        	def readId(self, pID):
+        		_sSql = ("SELECT idAppList, appNom, appMode, appDetails, tecTimeInsert FROM [dbo].[adm_applist] WHERE ID = '" + pID + "'")
+        		cursor = self.oCnx.cursor(as_dict=True)
+        		cursor.execute(_sSql)
+        		row = cursor.fetchone()
+        		oadm_applist = adm_applist(self.oCnx)
+        		oadm_applist.idAppList = row['idAppList']
+        		oadm_applist.appNom = row['appNom']
+        		oadm_applist.appMode = row['appMode']
+        		oadm_applist.appDetails = row['appDetails']
+        		oadm_applist.tecTimeInsert = row['tecTimeInsert']
+        		return oadm_applist
+        
+        ... code modifiÃ© 
+        	def readId(self, pID):
+        		_sSql = ("SELECT idAppList, appNom, appMode, appDetails FROM [dbo].[adm_applist] WHERE idAppList = '" + str(pID) + "'")
+        		cursor = self.oCnx.cursor(as_dict=True)
+        		cursor.execute(_sSql)
+        		row = cursor.fetchone()
+        		oadm_applist = adm_applist(self.oCnx)
+        		oadm_applist.idAppList = row['idAppList']
+        		oadm_applist.appNom = row['appNom']
+        		oadm_applist.appMode = row['appMode']
+        		oadm_applist.appDetails = row['appDetails']
+        		return oadm_applist
+        ```
+        
+        READ WHERE :
+        Supprimer le tecTimeInsert ou autre valeurs purements techniques
+        
+        ```py
+        ... code gÃ©nÃ©rÃ©
+        	def readWhere(self, pWhere):
+        		_sSql = ("SELECT idAppList, appNom, appMode, appDetails, tecTimeInsert FROM [dbo].[adm_applist] WHERE " + pWhere )
+        		cursor = self.oCnx.cursor(as_dict=True)
+        		cursor.execute(_sSql)
+        		rows = cursor.fetchall()
+        		lstadm_applist = []
+        		for row in rows:
+        			oadm_applist = adm_applist(self.oCnx)
+        			oadm_applist.idAppList = row['idAppList']
+        			oadm_applist.appNom = row['appNom']
+        			oadm_applist.appMode = row['appMode']
+        			oadm_applist.appDetails = row['appDetails']
+        			oadm_applist.tecTimeInsert = row['tecTimeInsert']
+        			lstadm_applist.append(oadm_applist)
+        		return lstadm_applist
+        
+        ... code modifiÃ©
+        	def readWhere(self, pWhere):
+        		_sSql = ("SELECT idAppList, appNom, appMode, appDetails FROM [dbo].[adm_applist] WHERE " + pWhere )
+        		cursor = self.oCnx.cursor(as_dict=True)
+        		cursor.execute(_sSql)
+        		rows = cursor.fetchall()
+        		lstadm_applist = []
+        		for row in rows:
+        			oadm_applist = adm_applist(self.oCnx)
+        			oadm_applist.idAppList = row['idAppList']
+        			oadm_applist.appNom = row['appNom']
+        			oadm_applist.appMode = row['appMode']
+        			oadm_applist.appDetails = row['appDetails']
+        			lstadm_applist.append(oadm_applist)
+        		return lstadm_applist 
+        ```
+        
+        ## 3 Ajout des nouvelles tables aux classes
+        
+        Ouvrir le fichier correspondant Ã  la table sur laquelles on travaille :
+        
+        Exemple pour la base SALESKY
+        
+        **SaleskyBdd\SALESKY.py**
+        
+        Ajouter l'import et la dÃ©finition de classe correspondant. Le nom de la classe doit commencer par un "t" suivit du nom de la table.
+        
+        ```py
+            ...
+        
+        from . dbSALESKY.SALESKY_adm_applist import adm_applist
+        
+            ...
+        
+        class tadm_applist(adm_applist):
+        	def __init__(self, pDebug=False):
+        		oCnx = cnx.Salesky_ms(pDebug)
+        		super().__init__(oCnx)
+        
+            ...
+        ```
+        
+        ## 4 Versionning
+        
+        Dans le cas oÃ¹ une table est ajoutÃ©e ou supprimÃ©e, incrÃ©menter la version du package.
+        
+        3 fichier Ã  modifier :
+        
+        **./setup.py**
+        
+        ```py
+            version='1.1.8', (Ã  modifier)
+        ```
+        
+        **./Dockerfile**
+        
+        ```dockerfile
+            FROM python:3.8-alpine
+            RUN mkdir /pkg
+            WORKDIR /pkg
+        
+            (Ã  modifier)
+            ADD SaleskyDal-1.1.8-py3-none-any.whl /pkg 
+        
+            RUN apk add --no-cache --virtual .build-deps mariadb-dev freetds-dev freetds g++ gcc unixodbc-dev zlib-dev libjpeg jpeg-dev libffi-dev py3-requests
+            RUN /usr/local/bin/python -m pip install --upgrade pip
+            RUN pip3 install cython==0.29.35
+            RUN pip3 install --no-build-isolation pymssql==2.1.5
+        
+            (Ã  modifier)
+            RUN pip3 install SaleskyDal-1.1.8-py3-none-any.whl
+        
+            CMD ["ls"]
+        ```
+        
+        **./docker-compose.yml**
+        
+        ```yml
+        version: '3'
+        services:
+          pkg:
+            build:
+              context: .
+              dockerfile: Dockerfile
+            image: salesky/pkgsaleskydal:1.1.8 (Ã  modifier)
+            volumes:
+              - .:/pkg
+        
+        ```
+        
+        ## 5 GÃ©nÃ©ration de la Wheel
+        
+        /!\ NÃ©cessaire d'avoir installÃ© avec pip wheel /!\
+        
+        ```
+        pip install wheel
+        ```
+        
+        Enfin executer cette commande
+        
+        ```
+        py ./setup.py bdist_wheel
+        ```
+        
+        ## 6 DÃ©ploiement en local
+        
+        DÃ©sinstaller la wheel prÃ©cÃ©dente (si existe)
+        
+        ```
+        pip uninstall ./chemin/de/wheel/nom_wheel.whl
+        ```
+        
+        Installer la nouvelle wheel dans le projet python
+        
+        ```
+        pip install ./chemin/de/wheel/nom_wheel.whl
+        ```
+        
+        ## 7 DÃ©ploiement en live
+        
+        Si nom de version non modifiÃ© :
+        
+        Sur le serveur qui heberge votre application, remplacer le fichier wheel par le nouveau gÃ©nÃ©rÃ©.
+        
+        Si nom de version modifiÃ© :
+        
+        Sur le serveur qui heberge votre application, crÃ©er un nouveau dossier portant le numÃ©ro de version, y dÃ©placer le fichier **docke-compose.yml**, **Dockerfile** et le fichier wheel gÃ©nÃ©rÃ© dedans.
+        
+        CrÃ©er l'image du nouveau package :
+        
+        ```
+        docker build --tag salesky/pkgsalesky{dal|ws|tool}:nÂ°version {path}
+        ```
+        
+        Pour la version 1.1.5 :
+        
+        Le "." Ã  la fin de la commande correspond au chemin oÃ¹ se trouve le package. Dans l'exemple le prompt se trouve dans le rÃ©pertoire du fichier package.
+        
+        ```
+        docker build --tag salesky/pkgsaleskydal:1.1.5 .
+        ```
+        
+        ## ADDENDUM Ajouter une base au package 
+        
+        Dans le fichier de configuration **setup.py** ajouter le nom de la nouvelle base dans le tableau packages :
+        
+        ```py
+              packages=['SaleskyBdd', 'SaleskyBdd.dbflxSalesky', 'SaleskyBdd.dbOPENTRM', 'SaleskyBdd.dbREPORTSALESKY', 'SaleskyBdd.dbDBI_FR11',
+                        'SaleskyBdd.dbSALESKY', 'SaleskyBdd.dbdwhSalesky', 'SaleskyBdd.dbGESTEDI', 'SaleskyBdd.dbwrkOPENTRM', 'SaleskyBdd.dbBPW'],
+        ```
+        
+        Dans le fichier **_OutilCreation\creClassFromBdd.py** ajouter la configuration de cette nouvelle base.
+        
+        Enfin executer ce dernier.
+Keywords: KDDS Development
+Platform: ALL
+Classifier: Topic :: Pro
+Classifier: Topic :: Base

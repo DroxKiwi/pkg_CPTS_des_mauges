@@ -11,10 +11,10 @@ import os
 # python setup.py sdist
 
 setup(name='CPTSdal',
-      version='1.0.0',
+      version='1.0.1',
       author='Corentin Fredj',
       author_email='corentinfredj.dev@gmail.fr',
-      maintainer='Salesky',
+      maintainer='KDDS',
       maintainer_email='corentinfredj.dev@gmail.fr',
       keywords='KDDS Development',
       classifiers=['Topic :: Pro', 'Topic :: Base'],
@@ -25,5 +25,7 @@ setup(name='CPTSdal',
           os.path.dirname(__file__), 'README.md')).read(),
       license='GPL V3',
       platforms='ALL',
-      install_requires=['psycopg>=2.9.9',
+      install_requires=['psycopg>=2.9.10',
+                        'psycopg_binary>=3.2.3',
+                        'psycopg2>=2.9.9',
                         'SQLAlchemy==1.4.23'])

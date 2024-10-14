@@ -108,14 +108,11 @@ def creFile(pIns, pUpd, pDel, preadId):
         cursor.execute(sqlCol)
         rows = cursor.fetchall()
 
-        print(rows)
         nomBase = rows[0][0]
         # nomTbl = rows[0][0]
 
         nbrLi = len(rows)
         strLstCol = ', '.join(list(map(colListStr, rows)))
-        print(strLstCol)
-
         Entete()
         o = list(map(creObj, rows))
 
@@ -154,7 +151,6 @@ def creFile(pIns, pUpd, pDel, preadId):
 
 def colListStr(pRow):
     lstCol = []
-    #lstCol.append(pRow[3])
     lstCol.append(pRow[3])
     return pRow[3]
 
@@ -165,6 +161,9 @@ def Entete():
     liFic.append('# -*- coding: utf-8 -*-')
     if typeBdd == "MYSQL":
         liFic.append(f'from pymysql.cursors import DictCursor')
+    if typeBdd == "postgres":
+        liFic.append(f'import psycopg2')
+        liFic.append(f'import psycopg2.extras')
     liFic.append('')
     liFic.append(f'class {nomTbl}(object):')
 
@@ -172,7 +171,7 @@ def Entete():
 def creObj(pRow):
     global liFic
     col = pRow[3]
-    tbl = pRow[0]
+    tbl = pRow[2]
     pos = pRow[4]
     if pos == 1:
         liFic.append(f'\tdef __init__(self, pCnx):')
@@ -188,14 +187,17 @@ def creObj(pRow):
 def creUpd(pRow):
     global liFic
     col = pRow[3]
-    tbl = pRow[0]
+    tbl = pRow[2]
     pos = pRow[4]
-    sch = pRow[1]
+    sec = pRow[1]
+    sch = pRow[0]
     if pos == 1:
         liFic.append(f'\tdef update(p{tbl}_o):')
         liFic.append(f'\t\t_o{tbl} = p{tbl}_o')
         if typeBdd == "MSSQL":
             liFic.append(f'\t\t_upSQL = ("UPDATE [{sch}].[{tbl}] SET "')
+        if typeBdd == "postgres":
+            liFic.append(f'\t\t_upSQL = ("UPDATE {sch}.{sec}.{tbl} SET "')
         else:
             liFic.append(f'\t\t_upSQL = ("UPDATE `{sch}`.`{tbl}` SET "')
     elif pos < nbrLi:
@@ -221,15 +223,19 @@ def creUpdEmpty(pRow):
 def creIns(pRow):
     global liFic
     col = pRow[3]
-    tbl = pRow[0]
+    tbl = pRow[2]
     pos = pRow[4]
-    sch = pRow[1]
+    sec = pRow[1]
+    sch = pRow[0]
     if pos == 1:
         liFic.append(f'\tdef insert(p{tbl}_o):')
         liFic.append(f'\t\t_o{tbl} = p{tbl}_o')
         if typeBdd == "MSSQL":
             liFic.append(
                 f'\t\t_insSQL = ("INSERT INTO [{sch}].[{tbl}] ({strLstCol}) "')
+        if typeBdd == "postgres":
+            liFic.append(
+                f'\t\t_insSQL = ("INSERT INTO {sch}.{sec}.{tbl} ({strLstCol}) "')
         else:
             liFic.append(
                 f'\t\t_insSQL = ("INSERT INTO `{sch}`.`{tbl}` ({strLstCol}) "')
@@ -256,9 +262,10 @@ def creInsEmpty(pRow):
 def creReadId(pRow):
     global liFic
     col = pRow[3]
-    tbl = pRow[0]
+    tbl = pRow[2]
     pos = pRow[4]
-    sch = pRow[1]
+    sec = pRow[1]
+    sch = pRow[0]
     if pos == 1:
         liFic.append(f'\tdef readId(self, pID):')
         if typeBdd == "MSSQL":
@@ -267,8 +274,8 @@ def creReadId(pRow):
             liFic.append(f'\t\tcursor = self.oCnx.cursor(as_dict=True)')
         if typeBdd == "postgres":
             liFic.append(
-                f'\t\t_sSql = ("SELECT {strLstCol} FROM [{sch}].[{tbl}] WHERE ID = \'" + pID + "\'")')
-            liFic.append(f'\t\tcursor = self.oCnx.cursor(as_dict=True)')
+                f'\t\t_sSql = ("SELECT {strLstCol} FROM {sch}.{sec}.{tbl} WHERE ID = \'" + pID + "\'")')
+            liFic.append(f'\t\tcursor = self.oCnx.cursor(cursor_factory=psycopg2.extras.DictCursor)')
         else:
             liFic.append(
                 f'\t\t_sSql = ("SELECT {strLstCol} FROM `{sch}`.`{tbl}` WHERE ID = \'" + pID + "\'")')
@@ -297,9 +304,10 @@ def creReadIdEmpty(pRow):
 def creReadWhere(pRow):
     global liFic
     col = pRow[3]
-    tbl = pRow[0]
+    tbl = pRow[2]
     pos = pRow[4]
-    sch = pRow[1]
+    sec = pRow[1]
+    sch = pRow[0]
     if pos == 1:
         liFic.append(f'\tdef readWhere(self, pWhere):')
         if typeBdd == "MSSQL":
@@ -308,16 +316,19 @@ def creReadWhere(pRow):
             liFic.append(f'\t\tcursor = self.oCnx.cursor(as_dict=True)')
         if typeBdd == "postgres":
             liFic.append(
-                f'\t\t_sSql = ("SELECT {strLstCol} FROM [{sch}].[{tbl}] WHERE " + pWhere )')
-            liFic.append(f'\t\tcursor = self.oCnx.cursor(as_dict=True)')
+                f'\t\t_sSql = ("SELECT {strLstCol} FROM {sch}.{sec}.{tbl} WHERE " + pWhere )')
+            liFic.append(f'\t\tcursor = self.oCnx.cursor(cursor_factory=psycopg2.extras.DictCursor)')
         else:
             liFic.append(
                 f'\t\t_sSql = ("SELECT {strLstCol} FROM `{sch}`.`{tbl}` WHERE " + pWhere )')
             liFic.append(f'\t\tcursor = self.oCnx.cursor(DictCursor)')
         liFic.append('\t\tcursor.execute(_sSql)')
         liFic.append('\t\trows = cursor.fetchall()')
-        liFic.append(f'\t\tlst{tbl} = []')
+        liFic.append('\t\tdict_result = []')
         liFic.append('\t\tfor row in rows:')
+        liFic.append('\t\t\tdict_result.append(dict(row))')
+        liFic.append(f'\t\tlst{tbl} = []')
+        liFic.append('\t\tfor row in dict_result:')
         liFic.append(f'\t\t\to{tbl} = {tbl}(self.oCnx)')
         liFic.append(f'\t\t\to{tbl}.{col} = row[\'{col}\']')
     elif pos < nbrLi:

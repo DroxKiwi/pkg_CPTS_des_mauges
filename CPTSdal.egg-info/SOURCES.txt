@@ -5,5 +5,8 @@ CPTSdal.egg-info/SOURCES.txt
 CPTSdal.egg-info/dependency_links.txt
 CPTSdal.egg-info/requires.txt
 CPTSdal.egg-info/top_level.txt
+bdd/clCnxBdd.py
 bdd/cpts.py
+bdd/dbcpts/cpts_articles.py
+bdd/dbcpts/cpts_tags.py
 bdd/dbcpts/cpts_users.py

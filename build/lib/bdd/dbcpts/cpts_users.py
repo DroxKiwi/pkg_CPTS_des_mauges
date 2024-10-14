@@ -1,53 +1,62 @@
 
 # -*- coding: utf-8 -*-
+import psycopg2
+import psycopg2.extras
 
 class users(object):
 	def __init__(self, pCnx):
 		self.oCnx = pCnx
 		self.user_id = None
-		self.name = None
+		self.username = None
+		self.accesstoken = None
+		self.bearertoken = None
 		self.password = None
+		self.actif = None
 
-	def update(pcpts_o):
-		_ocpts = pcpts_o
-		_upSQL = ("UPDATE `public`.`cpts` SET "
-		"name = " + ("null" if _ocpts.name == None else  ("'" + str(_ocpts.name) + "'")) + ", "
-		"password = " + ("null" if _ocpts.password == None else  ("'" + str(_ocpts.password) + "'")) + " "
-		"WHERE ID = ID;")
+	def updateToken(pusers_o):
+		_ousers = pusers_o
+		_upSQL = ("UPDATE cpts.public.users SET "
+		"accesstoken = " + ("null " if _ousers.accesstoken == None else  ("'" + str(_ousers.accesstoken) + "' ")) +
+		"WHERE user_id = '"+str(_ousers.user_id)+"';")
+		print(_upSQL)
 		return _upSQL
 
-	def insert(pcpts_o):
-		_ocpts = pcpts_o
-		_insSQL = ("INSERT INTO `public`.`cpts` (user_id, name, password) "
-		"VALUES ("
-		 + ('null' if _ocpts.name == None else "'" + str(_ocpts.name) + "'") + ", "
-		 + ('null' if _ocpts.password == None else "'" + str(_ocpts.password) + "')"))
-		return _insSQL
+	def insert(pusers_o):
+		return "disabled"
 
 	def delete():
 		return ""
 
 	def readId(self, pID):
-		_sSql = ("SELECT user_id, name, password FROM [public].[cpts] WHERE ID = '" + pID + "'")
-		cursor = self.oCnx.cursor(as_dict=True)
+		_sSql = ("SELECT user_id, username, accesstoken, bearertoken, password, actif FROM cpts.public.users WHERE user_id = '" + str(pID) + "'")
+		cursor = self.oCnx.cursor(cursor_factory=psycopg2.extras.DictCursor)
 		cursor.execute(_sSql)
 		row = cursor.fetchone()
-		ocpts = cpts(self.oCnx)
-		ocpts.user_id = row['user_id']
-		ocpts.name = row['name']
-		ocpts.password = row['password']
-		return ocpts
+		ousers = users(self.oCnx)
+		ousers.user_id = row['user_id']
+		ousers.username = row['username']
+		ousers.accesstoken = row['accesstoken']
+		ousers.bearertoken = row['bearertoken']
+		ousers.password = row['password']
+		ousers.actif = row['actif']
+		return ousers
 
 	def readWhere(self, pWhere):
-		_sSql = ("SELECT user_id, name, password FROM [public].[cpts] WHERE " + pWhere )
-		cursor = self.oCnx.cursor(as_dict=True)
+		_sSql = ("SELECT user_id, username, accesstoken, bearertoken, password, actif FROM cpts.public.users WHERE " + pWhere )
+		cursor = self.oCnx.cursor(cursor_factory=psycopg2.extras.DictCursor)
 		cursor.execute(_sSql)
 		rows = cursor.fetchall()
-		lstcpts = []
+		dict_result = []
 		for row in rows:
-			ocpts = cpts(self.oCnx)
-			ocpts.user_id = row['user_id']
-			ocpts.name = row['name']
-			ocpts.password = row['password']
-			lstcpts.append(ocpts)
-		return lstcpts
+			dict_result.append(dict(row))
+		lstusers = []
+		for row in dict_result:
+			ousers = users(self.oCnx)
+			ousers.user_id = row['user_id']
+			ousers.username = row['username']
+			ousers.accesstoken = row['accesstoken']
+			ousers.bearertoken = row['bearertoken']
+			ousers.password = row['password']
+			ousers.actif = row['actif']
+			lstusers.append(ousers)
+		return lstusers

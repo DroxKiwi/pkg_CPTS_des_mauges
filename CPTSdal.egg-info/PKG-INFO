@@ -1,11 +1,11 @@
 Metadata-Version: 1.2
 Name: CPTSdal
-Version: 1.0.0
+Version: 1.0.1
 Summary: Package CPTS DAL
 Home-page: UNKNOWN
 Author: Corentin Fredj
 Author-email: corentinfredj.dev@gmail.fr
-Maintainer: Salesky
+Maintainer: KDDS
 Maintainer-email: corentinfredj.dev@gmail.fr
 License: GPL V3
 Description: # Documentation Package

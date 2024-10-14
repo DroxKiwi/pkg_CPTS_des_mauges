@@ -1,8 +1,7 @@
-import psycopg
 import psycopg2.extras
 import psycopg2
 
-class CNX():
+class cnx(object):
 
     @staticmethod
     def cpts_ps(debug=True):
@@ -10,7 +9,4 @@ class CNX():
             return psycopg2.connect(host='localhost', dbname='cpts', user='postgres', password='toor', port=5437)
         else:
             return psycopg2.connect(host='localhost', dbname='cpts', user='postgres', password='toor', port=5437)
-        
-    @staticmethod
-    def postgresDictCursor():
-        return psycopg2.extras.DictCursor
+

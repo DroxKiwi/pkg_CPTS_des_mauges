@@ -8,6 +8,7 @@ class users(object):
 		self.oCnx = pCnx
 		self.user_id = None
 		self.username = None
+		self.adminofurl = None
 		self.accesstoken = None
 		self.bearertoken = None
 		self.password = None
@@ -28,13 +29,14 @@ class users(object):
 		return ""
 
 	def readId(self, pID):
-		_sSql = ("SELECT user_id, username, accesstoken, bearertoken, password, actif FROM cpts.public.users WHERE user_id = '" + str(pID) + "'")
+		_sSql = ("SELECT user_id, username, adminofurl, accesstoken, bearertoken, password, actif FROM cpts.public.users WHERE user_id = '" + str(pID) + "'")
 		cursor = self.oCnx.cursor(cursor_factory=psycopg2.extras.DictCursor)
 		cursor.execute(_sSql)
 		row = cursor.fetchone()
 		ousers = users(self.oCnx)
 		ousers.user_id = row['user_id']
 		ousers.username = row['username']
+		ousers.adminofurl = row['adminofurl']
 		ousers.accesstoken = row['accesstoken']
 		ousers.bearertoken = row['bearertoken']
 		ousers.password = row['password']
@@ -42,7 +44,7 @@ class users(object):
 		return ousers
 
 	def readWhere(self, pWhere):
-		_sSql = ("SELECT user_id, username, accesstoken, bearertoken, password, actif FROM cpts.public.users WHERE " + pWhere )
+		_sSql = ("SELECT user_id, username, adminofurl, accesstoken, bearertoken, password, actif FROM cpts.public.users WHERE " + pWhere )
 		cursor = self.oCnx.cursor(cursor_factory=psycopg2.extras.DictCursor)
 		cursor.execute(_sSql)
 		rows = cursor.fetchall()
@@ -54,6 +56,7 @@ class users(object):
 			ousers = users(self.oCnx)
 			ousers.user_id = row['user_id']
 			ousers.username = row['username']
+			ousers.adminofurl = row['adminofurl']
 			ousers.accesstoken = row['accesstoken']
 			ousers.bearertoken = row['bearertoken']
 			ousers.password = row['password']

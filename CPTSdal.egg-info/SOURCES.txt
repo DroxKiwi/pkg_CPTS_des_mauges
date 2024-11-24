@@ -8,5 +8,9 @@ CPTSdal.egg-info/top_level.txt
 bdd/clCnxBdd.py
 bdd/cpts.py
 bdd/dbcpts/cpts_articles.py
+bdd/dbcpts/cpts_events.py
+bdd/dbcpts/cpts_pages.py
+bdd/dbcpts/cpts_prod.py
+bdd/dbcpts/cpts_prof.py
 bdd/dbcpts/cpts_tags.py
 bdd/dbcpts/cpts_users.py

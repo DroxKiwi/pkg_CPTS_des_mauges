@@ -23,12 +23,12 @@ class prof(object):
 		"img = " + ("null" if _oprof.img == None else  ("'" + str(_oprof.img) + "'")) + ", "
 		"tectimeinsert = " + ("null" if _oprof.tectimeinsert == None else  ("'" + str(_oprof.tectimeinsert) + "'")) + ", "
 		"actif = " + ("null" if _oprof.actif == None else  ("'" + str(_oprof.actif) + "'")) + " "
-		"WHERE prof_id = " + _oprof.prof_id +";")
+		"WHERE prof_id = " + str(_oprof.prof_id) +";")
 		return _upSQL
 
 	def insert(pprof_o):
 		_oprof = pprof_o
-		_insSQL = ("INSERT INTO cpts.public.prof (prof_id, name, subtitle, description, img, tectimeinsert, actif) "
+		_insSQL = ("INSERT INTO cpts.public.prof (name, subtitle, description, img, tectimeinsert, actif) "
 		"VALUES ("
 		 + ('null' if _oprof.name == None else "'" + str(_oprof.name) + "'") + ", "
 		 + ('null' if _oprof.subtitle == None else "'" + str(_oprof.subtitle) + "'") + ", "
@@ -38,8 +38,10 @@ class prof(object):
 		 + ('null' if _oprof.actif == None else "'" + str(_oprof.actif) + "')"))
 		return _insSQL
 
-	def delete():
-		return ""
+	def delete(pprof_o):
+		_oprof = pprof_o
+		_insSQL = (f"DELETE FROM cpts.public.prof WHERE prof_id = {str(_oprof.prof_id)};")
+		return _insSQL
 
 	def readId(self, pID):
 		_sSql = ("SELECT prof_id, name, subtitle, description, img, tectimeinsert, actif FROM cpts.public.prof WHERE prof_id = '" + pID + "'")

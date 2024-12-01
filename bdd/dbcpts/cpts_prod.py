@@ -19,7 +19,7 @@ class prod(object):
 		"name = " + ("null" if _oprod.name == None else  ("'" + str(_oprod.name) + "'")) + ", "
 		"img = " + ("null" if _oprod.img == None else  ("'" + str(_oprod.img) + "'")) + ", "
 		"actif = " + ("null" if _oprod.actif == None else  ("'" + str(_oprod.actif) + "'")) + " "
-		"WHERE prod_id = " + _oprod.prod_id + ";")
+		"WHERE prod_id = " + str(_oprod.prod_id) + ";")
 		return _upSQL
 
 	def insert(pprod_o):
@@ -34,7 +34,7 @@ class prod(object):
 
 	def delete(pprod_o):
 		_oprod = pprod_o
-		_insSQL = (f"DELETE FROM cpts.public.prod WHERE prod_id = {_oprod.prod_id};")
+		_insSQL = (f"DELETE FROM cpts.public.prod WHERE prod_id = {str(_oprod.prod_id)};")
 		return _insSQL
 
 	def readId(self, pID):

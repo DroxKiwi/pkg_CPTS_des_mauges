@@ -1,4 +1,3 @@
-import psycopg
 import psycopg2.extras
 import psycopg2
 

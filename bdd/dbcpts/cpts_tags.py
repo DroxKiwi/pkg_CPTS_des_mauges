@@ -29,8 +29,10 @@ class tags(object):
 		 + ('null' if _otags.actif == None else "'" + str(_otags.actif) + "')"))
 		return _insSQL
 
-	def delete():
-		return ""
+	def delete(ptags_o):
+		_otags = ptags_o
+		_insSQL = (f"DELETE FROM cpts.public.tags WHERE tag_id = {str(_otags.tag_id)};")
+		return _insSQL
 
 	def readId(self, pID):
 		_sSql = ("SELECT tag_id, name, color, actif FROM cpts.public.tags WHERE tag_id = '" + str(pID) + "'")

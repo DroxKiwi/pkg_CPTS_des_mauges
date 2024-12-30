@@ -15,6 +15,9 @@ class globaldata(object):
 		self.chiffrepsl = None
 		self.chiffrecom = None
 		self.chiffrehab = None
+		self.hommepageprjstext = None
+		self.quisommesnousmaintext = None
+		self.mail = None
 
 	def update(pglobaldata_o):
 		_oglobaldata = pglobaldata_o
@@ -26,13 +29,16 @@ class globaldata(object):
 		"linkedin = " + ("null" if _oglobaldata.linkedin == None else  ("'" + str(_oglobaldata.linkedin) + "'")) + ", "
 		"chiffrepsl = " + ("null" if _oglobaldata.chiffrepsl == None else  ("'" + str(_oglobaldata.chiffrepsl) + "'")) + ", "
 		"chiffrecom = " + ("null" if _oglobaldata.chiffrecom == None else  ("'" + str(_oglobaldata.chiffrecom) + "'")) + ", "
-		"chiffrehab = " + ("null" if _oglobaldata.chiffrehab == None else  ("'" + str(_oglobaldata.chiffrehab) + "'")) + " "
+		"chiffrehab = " + ("null" if _oglobaldata.chiffrehab == None else  ("'" + str(_oglobaldata.chiffrehab) + "'")) + ", "
+		"hommepageprjstext = " + ("null" if _oglobaldata.hommepageprjstext == None else  ("'" + str(_oglobaldata.hommepageprjstext) + "'")) + ", "
+		"quisommesnousmaintext = " + ("null" if _oglobaldata.quisommesnousmaintext == None else  ("'" + str(_oglobaldata.quisommesnousmaintext) + "'")) + ", "
+		"mail = " + ("null" if _oglobaldata.mail == None else  ("'" + str(_oglobaldata.mail) + "'")) + " "
 		"WHERE globaldata_id = " + str(_oglobaldata.globaldata_id) + ";")
 		return _upSQL
 
 	def insert(pglobaldata_o):
 		_oglobaldata = pglobaldata_o
-		_insSQL = ("INSERT INTO cpts.public.globaldata (tel, adr, postalcode, facebook, linkedin, chiffrepsl, chiffrecom, chiffrehab) "
+		_insSQL = ("INSERT INTO cpts.public.globaldata (tel, adr, postalcode, facebook, linkedin, chiffrepsl, chiffrecom, chiffrehab, hommepageprjstext, quisommesnousmaintext, mail) "
 		"VALUES ("
 		 + ('null' if _oglobaldata.tel == None else "'" + str(_oglobaldata.tel) + "'") + ", "
 		 + ('null' if _oglobaldata.adr == None else "'" + str(_oglobaldata.adr) + "'") + ", "
@@ -41,14 +47,17 @@ class globaldata(object):
 		 + ('null' if _oglobaldata.linkedin == None else "'" + str(_oglobaldata.linkedin) + "'") + ", "
 		 + ('null' if _oglobaldata.chiffrepsl == None else "'" + str(_oglobaldata.chiffrepsl) + "'") + ", "
 		 + ('null' if _oglobaldata.chiffrecom == None else "'" + str(_oglobaldata.chiffrecom) + "'") + ", "
-		 + ('null' if _oglobaldata.chiffrehab == None else "'" + str(_oglobaldata.chiffrehab) + "')"))
+		 + ('null' if _oglobaldata.chiffrehab == None else "'" + str(_oglobaldata.chiffrehab) + "'") + ", "
+		 + ('null' if _oglobaldata.hommepageprjstext == None else "'" + str(_oglobaldata.hommepageprjstext) + "'") + ", "
+		 + ('null' if _oglobaldata.quisommesnousmaintext == None else "'" + str(_oglobaldata.quisommesnousmaintext) + "'") + ", "
+		 + ('null' if _oglobaldata.mail == None else "'" + str(_oglobaldata.mail) + "')"))
 		return _insSQL
 
 	def delete():
 		return ""
 
 	def readId(self, pID):
-		_sSql = ("SELECT globaldata_id, tel, adr, postalcode, facebook, linkedin, chiffrepsl, chiffrecom, chiffrehab FROM cpts.public.globaldata WHERE globaldata_id = '" + pID + "'")
+		_sSql = ("SELECT globaldata_id, tel, adr, postalcode, facebook, linkedin, chiffrepsl, chiffrecom, chiffrehab, hommepageprjstext, quisommesnousmaintext, mail FROM cpts.public.globaldata WHERE globaldata_id = '" + pID + "'")
 		cursor = self.oCnx.cursor(cursor_factory=psycopg2.extras.DictCursor)
 		cursor.execute(_sSql)
 		row = cursor.fetchone()
@@ -62,10 +71,13 @@ class globaldata(object):
 		oglobaldata.chiffrepsl = row['chiffrepsl']
 		oglobaldata.chiffrecom = row['chiffrecom']
 		oglobaldata.chiffrehab = row['chiffrehab']
+		oglobaldata.hommepageprjstext = row['hommepageprjstext']
+		oglobaldata.quisommesnousmaintext = row['quisommesnousmaintext']
+		oglobaldata.mail = row['mail']
 		return oglobaldata
 
 	def readWhere(self, pWhere):
-		_sSql = ("SELECT globaldata_id, tel, adr, postalcode, facebook, linkedin, chiffrepsl, chiffrecom, chiffrehab FROM cpts.public.globaldata WHERE " + pWhere )
+		_sSql = ("SELECT globaldata_id, tel, adr, postalcode, facebook, linkedin, chiffrepsl, chiffrecom, chiffrehab, hommepageprjstext, quisommesnousmaintext, mail FROM cpts.public.globaldata WHERE " + pWhere )
 		cursor = self.oCnx.cursor(cursor_factory=psycopg2.extras.DictCursor)
 		cursor.execute(_sSql)
 		rows = cursor.fetchall()
@@ -84,5 +96,8 @@ class globaldata(object):
 			oglobaldata.chiffrepsl = row['chiffrepsl']
 			oglobaldata.chiffrecom = row['chiffrecom']
 			oglobaldata.chiffrehab = row['chiffrehab']
+			oglobaldata.hommepageprjstext = row['hommepageprjstext']
+			oglobaldata.quisommesnousmaintext = row['quisommesnousmaintext']
+			oglobaldata.mail = row['mail']
 			lstglobaldata.append(oglobaldata)
 		return lstglobaldata

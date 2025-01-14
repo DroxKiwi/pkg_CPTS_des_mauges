@@ -1,4 +1,4 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.2
 Name: CPTSdal
 Version: 1.0.1
 Summary: Package CPTS DAL
@@ -15,6 +15,17 @@ Requires-Dist: psycopg>=2.9.10
 Requires-Dist: psycopg_binary>=3.2.3
 Requires-Dist: psycopg2>=2.9.9
 Requires-Dist: SQLAlchemy==1.4.23
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: keywords
+Dynamic: license
+Dynamic: maintainer
+Dynamic: maintainer-email
+Dynamic: platform
+Dynamic: requires-dist
+Dynamic: summary
 
 # Documentation Package
 

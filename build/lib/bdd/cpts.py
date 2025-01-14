@@ -12,6 +12,12 @@ from . dbcpts.cpts_patf import patf
 from . dbcpts.cpts_coassos import coassos
 from . dbcpts.cpts_globaldata import globaldata
 from . dbcpts.cpts_livret_pages import livret_pages
+from . dbcpts.cpts_orga import orga
+
+class torga(orga):
+	def __init__(self, pDebug=False):
+		oCnx = cnx.cpts_ps(pDebug)
+		super().__init__(oCnx)
 
 class tlivret_pages(livret_pages):
 	def __init__(self, pDebug=False):

@@ -12,6 +12,7 @@ bdd/dbcpts/cpts_coassos.py
 bdd/dbcpts/cpts_events.py
 bdd/dbcpts/cpts_globaldata.py
 bdd/dbcpts/cpts_livret_pages.py
+bdd/dbcpts/cpts_orga.py
 bdd/dbcpts/cpts_pages.py
 bdd/dbcpts/cpts_patd.py
 bdd/dbcpts/cpts_patf.py
